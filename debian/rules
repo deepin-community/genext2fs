@@ -1,4 +1,15 @@
 #!/usr/bin/make -f
 
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
 %:
 	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- --enable-libarchive
+
+override_dh_auto_test:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	./test.sh
+endif
+	dh_auto_test
